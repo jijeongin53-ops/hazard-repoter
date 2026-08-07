@@ -34,7 +34,12 @@ export default function BottomSheet({ isOpen, onClose, lat, lng, onSubmit }: Bot
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.coord2Address(lng, lat, (result: any, status: any) => {
         if (status === window.kakao.maps.services.Status.OK) {
-          const addr = result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
+          let addr = '';
+          if (result[0].road_address) {
+            addr = result[0].road_address.address_name;
+          } else if (result[0].address) {
+            addr = result[0].address.address_name;
+          }
           setAddress(addr);
         }
       });
@@ -49,9 +54,34 @@ export default function BottomSheet({ isOpen, onClose, lat, lng, onSubmit }: Bot
 
     let photoBase64 = null;
     if (photo) {
-      const reader = new FileReader();
       photoBase64 = await new Promise((resolve) => {
-        reader.onload = (e) => resolve(e.target?.result);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const MAX_SIZE = 1024;
+
+            if (width > height && width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            } else if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            
+            // 압축된 이미지를 base64로 변환 (quality 0.7)
+            resolve(canvas.toDataURL('image/jpeg', 0.7));
+          };
+          img.src = e.target?.result as string;
+        };
         reader.readAsDataURL(photo);
       });
     }
