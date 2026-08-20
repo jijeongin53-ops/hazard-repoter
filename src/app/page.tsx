@@ -144,11 +144,10 @@ export default function Home() {
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   if (target.src.includes('/uc?export=view&id=')) {
-                    // Fallback to thumbnail API if uc endpoint is blocked
                     target.src = target.src.replace('/uc?export=view&id=', '/thumbnail?sz=w800&id=');
                   }
                 }}
-                style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '12px', marginBottom: '8px' }} 
+                style={{ width: '100%', maxHeight: '400px', objectFit: 'contain', borderRadius: '12px', marginBottom: '8px', backgroundColor: '#f5f5f5' }} 
               />
             )}
             <p style={{ margin: 0 }}><strong>카테고리:</strong> {selectedHazardData.category}</p>
