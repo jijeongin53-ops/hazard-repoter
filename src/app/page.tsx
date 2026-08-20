@@ -135,8 +135,19 @@ export default function Home() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '15px' }}>
             {selectedHazardData.photo_url && (
               <img 
-                src={selectedHazardData.photo_url} 
+                src={
+                  selectedHazardData.photo_url.includes('drive.google.com') 
+                    ? selectedHazardData.photo_url.replace(/\/file\/d\/(.+?)\/(view|edit).*/, '/uc?export=view&id=$1')
+                    : selectedHazardData.photo_url
+                } 
                 alt="현장 사진" 
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (target.src.includes('/uc?export=view&id=')) {
+                    // Fallback to thumbnail API if uc endpoint is blocked
+                    target.src = target.src.replace('/uc?export=view&id=', '/thumbnail?sz=w800&id=');
+                  }
+                }}
                 style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '12px', marginBottom: '8px' }} 
               />
             )}
