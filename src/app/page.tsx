@@ -158,10 +158,16 @@ export default function Home() {
             <p style={{ margin: 0 }}><strong>신고일시:</strong> {new Date(selectedHazardData.created_at).toLocaleString()}</p>
           </div>
 
-          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+            <button 
+              onClick={() => setSelectedHazardData(null)} 
+              style={{ flex: 1, backgroundColor: '#f5f5f5', color: '#333', border: '1px solid #ddd', padding: '12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
+            >
+              지도로 돌아가기
+            </button>
             <button 
               onClick={handleDelete} 
-              style={{ backgroundColor: '#ff4d4f', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+              style={{ backgroundColor: '#ff4d4f', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
             >
               삭제하기
             </button>
